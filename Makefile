@@ -115,7 +115,7 @@ start: build
 	@echo "Go to http://localhost:$(AGENT_PROXY_WEB_PORT) for Agent Gateway UI."
 	@echo "Go to http://localhost:$(JAEGER_PORT)/jaeger/ui for the Jaeger UI."
 	@echo "Go to http://localhost:$(AGENT_PROXY_MCP_PORT) for MCP Proxy."
-	agentgateway --file config.yaml
+	#agentgateway --file config.yaml
 
 .PHONY: stop
 stop:
