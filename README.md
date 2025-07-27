@@ -52,14 +52,14 @@ Each SDK example is self-contained and can be run independently:
 cd docker/sdk/crew-ai  # or any other SDK directory
 
 # Run with single command
-docker compose up --build
+make start
 ```
 
 ### 🧠 Inference Options
 
 All examples support multiple inference backends:
 
-1. **Local Models** (default): Uses Docker Model Runner for fully offline operation
+1. **Local Models** (default): Uses ollama
 2. **OpenAI Integration**: Create `secret.openai-api-key` file with your API key
 3. **Docker Offload**: For high-performance remote GPU instances
 
