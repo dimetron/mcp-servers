@@ -9,7 +9,9 @@ DOCKER_BUILD_ARGS=--build-arg DOCKER_REGISTRY_TAG=$(DOCKER_REGISTRY_TAG) --build
 
 AGENT_PROXY_WEB_PORT=15000
 AGENT_PROXY_MCP_PORT=10000
+PROMETHEUS_PORT=9090
 JAEGER_PORT=16686
+LITELLM_PORT=4000
 
 # MCP services to build
 AGENT_SDK = $(shell ls docker/sdk)
@@ -113,8 +115,10 @@ start: build
 	docker rm -f agw_time
 	$(DOCKER_COMPOSE_CMD) $(DOCKER_COMPOSE_ENV) up --force-recreate --remove-orphans --detach
 	@echo "Go to http://localhost:$(AGENT_PROXY_WEB_PORT) for Agent Gateway UI."
-	@echo "Go to http://localhost:$(JAEGER_PORT)/jaeger/ui for the Jaeger UI."
 	@echo "Go to http://localhost:$(AGENT_PROXY_MCP_PORT) for MCP Proxy."
+	@echo "Go to http://localhost:$(LITELLM_PORT) for the LiteLLM"
+	@echo "Go to http://localhost:$(JAEGER_PORT)/jaeger/ui for the Jaeger UI."
+	@echo "Go to http://localhost:$(PROMETHEUS_PORT) for the Jaeger UI."
 	#agentgateway --file config.yaml
 
 .PHONY: stop

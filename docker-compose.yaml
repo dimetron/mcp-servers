@@ -11,9 +11,9 @@ networks:
     driver: bridge
 
 services:
-  agent-gateway:
+  agentgateway:
     image: ghcr.io/dimetron/mcp-servers/agentgateway:local
-    container_name: agent-gateway
+    container_name: agentgateway
     ports:
       - 15000:15000 #ui
       - 10000:10000 #mcp
@@ -35,6 +35,7 @@ services:
         limits:
           memory: 1200M
     restart: unless-stopped
+    #network_mode: host
     ports:
       - 4317:4317
       - 4318:4318
@@ -46,7 +47,11 @@ services:
     image: zeek/zeek:7.2
     container_name: zeek
     command: zeek -C -i eth0
+    working_dir: /root/zeek
     privileged: true
+    network_mode: host
+    volumes:
+      - ./logs/zeek:/root/zeek
     logging: *logging
 
   litellm:
@@ -55,15 +60,9 @@ services:
       args:
         target: runtime
     image: ghcr.io/berriai/litellm:main-stable
-    #########################################
-    ## Uncomment these lines to start proxy with a config.yaml file ##
-    # volumes:
-    #  - ./config.yaml:/app/config.yaml <<- this is missing in the docker-compose file currently
-    # command:
-    #  - "--config=/app/config.yaml"
-    ##############################################
+    #network_mode: host
     ports:
-      - "4000:4000" # Map the container port to the host, change the host port if necessary
+      - "${LITELLM_PORT}:${LITELLM_PORT}" # Map the container port to the host, change the host port if necessary
     environment:
       DATABASE_URL: "postgresql://llmproxy:dbpassword9090@db:5432/litellm"
       STORE_MODEL_IN_DB: "True" # allows adding models to proxy via UI
@@ -77,7 +76,6 @@ services:
       timeout: 10s   # Health check command times out after 10 seconds
       retries: 3     # Retry up to 3 times if health check fails
       start_period: 40s  # Wait 40 seconds after container start before beginning health checks
-
   db:
     image: postgres:16
     restart: always
@@ -102,7 +100,7 @@ services:
       - prometheus_data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"
+      - "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
