@@ -31,7 +31,7 @@ buildx-default:
 
 .PHONY: build/agentgateway
 build/agentgateway: buildx-default
-	docker build -t $(DOCKER_REGISTRY_NAME)/agentgateway:$(DOCKER_REGISTRY_TAG) -f docker/agentgateway/Dockerfile .
+	docker build -t $(DOCKER_REGISTRY_NAME)/agentgateway:$(DOCKER_REGISTRY_TAG) -f docker/gateways/agentgateway/Dockerfile .
 
 .PHONY: build/base
 build/base: buildx-default
