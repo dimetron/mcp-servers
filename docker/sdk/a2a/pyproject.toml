@@ -1,0 +1,27 @@
+[project]
+name = "a2a"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "a2a-sdk>=0.2.8",
+    "click>=8.2.1",
+    "google-adk>=1.4.2",
+    "google-genai>=1.21.1",
+    "litellm>=1.73.0",
+    "mcp>=1.9.4",
+    "openai>=1.88.0",
+    "pydantic>=2.11.7",
+    "pyright>=1.1.402",
+    "python-dotenv>=1.1.0",
+    "pyyaml>=6.0.2",
+    "uvicorn>=0.34.3",
+]
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.402",
+    "ruff>=0.12.0",
+    "types-pyyaml>=6.0.12.20250516",
+]

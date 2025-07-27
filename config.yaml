@@ -1,0 +1,49 @@
+binds:
+- port: 10000
+  listeners:
+  - routes:
+    - backends:
+      - mcp:
+          name: default
+          targets:
+          - name: sequentialthinking
+            stdio:
+              cmd: docker
+              args:
+              - run
+              - --rm
+              - --name
+              - agw_sequentialthinking
+              - -i
+              - ghcr.io/dimetron/mcp-servers/agw_sequentialthinking
+              env: {}
+          - name: memory
+            stdio:
+              cmd: docker
+              args:
+              - run
+              - --rm
+              - --name
+              - agw_memory
+              - -i
+              - ghcr.io/dimetron/mcp-servers/memory
+              env: {}
+          - name: time
+            stdio:
+              cmd: docker
+              args:
+                - run
+                - --rm
+                - --name
+                - agw_memory
+                - -i
+                - ghcr.io/dimetron/mcp-servers/time
+              env: { }
+      policies:
+        cors:
+          allowOrigins:
+          - '*'
+          allowHeaders:
+          - mcp-protocol-version
+          - content-type
+          - cache-control

@@ -1,0 +1,50 @@
+x-default-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "2"
+    tag: "{{.Name}}"
+
+networks:
+  default:
+    name: mcp-servers
+    driver: bridge
+
+services:
+  agent-gateway:
+    image: mcp-servers/agentgateway:local
+    container_name: agent-gateway
+    ports:
+      - 15000:15000 #ui
+      - 10000:10000 #mcp
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config.yaml:/etc/config.yaml
+    depends_on:
+      - jaeger
+    logging: *logging
+  # ********************
+  # Telemetry Components
+  # ********************
+  # Jaeger
+  jaeger:
+    image: ${JAEGERTRACING_IMAGE}
+    container_name: jaeger
+    deploy:
+      resources:
+        limits:
+          memory: 1200M
+    restart: unless-stopped
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 16686:16686
+    logging: *logging
+
+  # Zeek
+  zeek:
+    image: zeek/zeek:7.2
+    container_name: zeek
+    command: zeek -C -i eth0
+    privileged: true
+    logging: *logging

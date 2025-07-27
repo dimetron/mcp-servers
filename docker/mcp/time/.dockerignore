@@ -1,0 +1,5 @@
+# Ignore files
+.venv
+__pycache__
+*.pyc
+*.pyo
