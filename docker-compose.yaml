@@ -11,18 +11,18 @@ networks:
     driver: bridge
 
 services:
-  agent-gateway:
-    image: mcp-servers/agentgateway:local
-    container_name: agent-gateway
-    ports:
-      - 15000:15000 #ui
-      - 10000:10000 #mcp
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./config.yaml:/etc/config.yaml
-    depends_on:
-      - jaeger
-    logging: *logging
+#  agent-gateway:
+#    image: ghcr.io/dimetron/mcp-servers/agentgateway:local
+#    container_name: agent-gateway
+#    ports:
+#      - 15000:15000 #ui
+#      - 10000:10000 #mcp
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - ./config.yaml:/etc/config.yaml
+#    depends_on:
+#      - jaeger
+#    logging: *logging
   # ********************
   # Telemetry Components
   # ********************

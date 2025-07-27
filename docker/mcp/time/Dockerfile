@@ -35,8 +35,5 @@ COPY --from=uv --chown=app:app /app/.venv /app/.venv
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Set the LOCAL_TIMEZONE environment variable
-ARG LOCAL_TIMEZONE="UTC"
-ENV LOCAL_TIMEZONE=${LOCAL_TIMEZONE}
 # when running the container, add --local-timezone and a bind mount to the host's db file
-ENTRYPOINT ["mcp-server-time", "--local-timezone", "${LOCAL_TIMEZONE}"]
+ENTRYPOINT ["mcp-server-time", "--local-timezone", "Europe/Prague"]

@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from mcp.shared.exceptions import McpError
 import pytest
 
-from mcp_server_time.server import TimeServer
+from src.server import TimeServer
 
 
 @pytest.mark.parametrize(

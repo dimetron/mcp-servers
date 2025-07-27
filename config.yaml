@@ -12,10 +12,8 @@ binds:
               args:
               - run
               - --rm
-              - --name
-              - agw_sequentialthinking
               - -i
-              - ghcr.io/dimetron/mcp-servers/agw_sequentialthinking
+              - ghcr.io/dimetron/mcp-servers/sequentialthinking:local
               env: {}
           - name: memory
             stdio:
@@ -23,10 +21,8 @@ binds:
               args:
               - run
               - --rm
-              - --name
-              - agw_memory
               - -i
-              - ghcr.io/dimetron/mcp-servers/memory
+              - ghcr.io/dimetron/mcp-servers/memory:local
               env: {}
           - name: time
             stdio:
@@ -34,10 +30,8 @@ binds:
               args:
                 - run
                 - --rm
-                - --name
-                - agw_memory
                 - -i
-                - ghcr.io/dimetron/mcp-servers/time
+                - ghcr.io/dimetron/mcp-servers/time:local
               env: { }
       policies:
         cors:

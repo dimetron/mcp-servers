@@ -4,11 +4,11 @@ import json
 from typing import Sequence
 
 from zoneinfo import ZoneInfo
-from tz${DOCKER_REGISTRY_TAG} import get_${DOCKER_REGISTRY_TAG}zone_name  # ← returns "Europe/Paris", etc.
+from tzlocal import get_localzone_name  # ← returns "Europe/Paris", etc.
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
-from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource
+from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource, ErrorData
 from mcp.shared.exceptions import McpError
 
 from pydantic import BaseModel
@@ -37,22 +37,22 @@ class TimeConversionInput(BaseModel):
     target_tz_list: list[str]
 
 
-def get_${DOCKER_REGISTRY_TAG}_tz(${DOCKER_REGISTRY_TAG}_tz_override: str | None = None) -> ZoneInfo:
-    if ${DOCKER_REGISTRY_TAG}_tz_override:
-        return ZoneInfo(${DOCKER_REGISTRY_TAG}_tz_override)
+def get_local_tz(local_tz_override: str | None = None) -> ZoneInfo:
+    if local_tz_override:
+        return ZoneInfo(local_tz_override)
 
-    # Get ${DOCKER_REGISTRY_TAG} timezone from datetime.now()
-    ${DOCKER_REGISTRY_TAG}_tzname = get_${DOCKER_REGISTRY_TAG}zone_name()
-    if ${DOCKER_REGISTRY_TAG}_tzname is not None:
-        return ZoneInfo(${DOCKER_REGISTRY_TAG}_tzname)
-    raise McpError("Could not determine ${DOCKER_REGISTRY_TAG} timezone - tzinfo is None")
+    # Get local timezone from datetime.now()
+    local_tzname = get_localzone_name()
+    if local_tzname is not None:
+        return ZoneInfo(local_tzname)
+    raise McpError("Could not determine local timezone - tzinfo is None")
 
 
 def get_zoneinfo(timezone_name: str) -> ZoneInfo:
     try:
         return ZoneInfo(timezone_name)
     except Exception as e:
-        raise McpError(f"Invalid timezone: {str(e)}")
+        raise McpError(ErrorData(code=-1, message=f"Invalid timezone: {str(e)}"))
 
 
 class TimeServer:
@@ -115,10 +115,10 @@ class TimeServer:
         )
 
 
-async def serve(${DOCKER_REGISTRY_TAG}_timezone: str | None = None) -> None:
+async def serve(local_timezone: str | None = None) -> None:
     server = Server("mcp-time")
     time_server = TimeServer()
-    ${DOCKER_REGISTRY_TAG}_tz = str(get_${DOCKER_REGISTRY_TAG}_tz(${DOCKER_REGISTRY_TAG}_timezone))
+    local_tz = str(get_local_tz(local_timezone))
 
     @server.list_tools()
     async def list_tools() -> list[Tool]:
@@ -132,7 +132,7 @@ async def serve(${DOCKER_REGISTRY_TAG}_timezone: str | None = None) -> None:
                     "properties": {
                         "timezone": {
                             "type": "string",
-                            "description": f"IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use '{${DOCKER_REGISTRY_TAG}_tz}' as ${DOCKER_REGISTRY_TAG} timezone if no timezone provided by the user.",
+                            "description": f"IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use '{local_tz}' as local timezone if no timezone provided by the user.",
                         }
                     },
                     "required": ["timezone"],
@@ -146,7 +146,7 @@ async def serve(${DOCKER_REGISTRY_TAG}_timezone: str | None = None) -> None:
                     "properties": {
                         "source_timezone": {
                             "type": "string",
-                            "description": f"Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use '{${DOCKER_REGISTRY_TAG}_tz}' as ${DOCKER_REGISTRY_TAG} timezone if no source timezone provided by the user.",
+                            "description": f"Source IANA timezone name (e.g., 'America/New_York', 'Europe/London'). Use '{local_tz}' as local timezone if no source timezone provided by the user.",
                         },
                         "time": {
                             "type": "string",
@@ -154,7 +154,7 @@ async def serve(${DOCKER_REGISTRY_TAG}_timezone: str | None = None) -> None:
                         },
                         "target_timezone": {
                             "type": "string",
-                            "description": f"Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Use '{${DOCKER_REGISTRY_TAG}_tz}' as ${DOCKER_REGISTRY_TAG} timezone if no target timezone provided by the user.",
+                            "description": f"Target IANA timezone name (e.g., 'Asia/Tokyo', 'America/San_Francisco'). Use '{local_tz}' as local timezone if no target timezone provided by the user.",
                         },
                     },
                     "required": ["source_timezone", "time", "target_timezone"],

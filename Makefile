@@ -21,9 +21,6 @@ clean:
 	docker buildx rm $(DOCKER_BUILDER_NAME) || true
 	docker buildx prune -f --filter "until=24h" || true
 	docker system prune -f --volumes
-	docker rm -f agw_sequentialthinking
-	docker rm -f agw_memory
-	docker rm -f agw_time
 	rm -rf ./logs/* ./reports/*.cve
 
 .PHONY: buildx-default
@@ -106,11 +103,14 @@ scan/all: scan/docker  #scan all docker images for vulnerabilities
 	grype .
 
 .PHONY: build
-build: build/agentgateway build/base build/mcp build/sdk scan/docker
+build: build/agentgateway build/base build/mcp build/sdk
 	docker images | grep "$(DOCKER_REGISTRY_NAME)"
 
 .PHONY: start
-start: build clean
+start: build
+	docker rm -f agw_sequentialthinking
+	docker rm -f agw_memory
+	docker rm -f agw_time
 	$(DOCKER_COMPOSE_CMD) $(DOCKER_COMPOSE_ENV) up --force-recreate --remove-orphans --detach
 	@echo "Go to http://localhost:$(AGENT_PROXY_WEB_PORT) for Agent Gateway UI."
 	@echo "Go to http://localhost:$(JAEGER_PORT)/jaeger/ui for the Jaeger UI."
