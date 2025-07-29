@@ -5,12 +5,12 @@ FROM $BASE_IMAGE_REGISTRY/chainguard/wolfi-base:latest
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 RUN --mount=type=cache,target=/var/cache/apk,rw \
-    apk update && apk add  \
+    apk update && apk add \
     curl openssl ca-certificates docker-cli
 
-ARG TARGETARCH
+ARG LOCALARCH
 RUN mkdir -p /usr/local/bin \
-    && curl -L https://github.com/agentgateway/agentgateway/releases/download/v0.6.2/agentgateway-linux-${TARGETARCH} -o /usr/local/bin/agentgateway \
+    && curl -L https://github.com/agentgateway/agentgateway/releases/download/v0.6.2/agentgateway-linux-${LOCALARCH} -o /usr/local/bin/agentgateway \
     && chmod +x /usr/local/bin/agentgateway \
     && agentgateway --version
 

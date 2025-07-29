@@ -37,6 +37,7 @@ cscope.*
 /generated
 *.pyc
 **/pyformat
+**/.env
 SOURCE_VERSION
 *.swap*
 tags

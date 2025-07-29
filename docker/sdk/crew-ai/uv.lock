@@ -82,7 +82,7 @@ wheels = [
 
 [[package]]
 name = "anthropic"
-version = "0.59.0"
+version = "0.60.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -93,9 +93,9 @@ dependencies = [
     { name = "sniffio" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fe/cf/52daff015f5a1f24eec891b3041f5f816712fea8b5113dc76638bcbc23d8/anthropic-0.59.0.tar.gz", hash = "sha256:d710d1ef0547ebbb64b03f219e44ba078e83fc83752b96a9b22e9726b523fd8f", size = 425679, upload-time = "2025-07-23T16:23:16.901Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4e/03/3334921dc54ed822b3dd993ae72d823a7402588521bbba3e024b3333a1fd/anthropic-0.60.0.tar.gz", hash = "sha256:a22ba187c6f4fd5afecb2fc913b960feccf72bc0d25c1b7ce0345e87caede577", size = 425983, upload-time = "2025-07-28T19:53:47.685Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3c/b1/03f680393eac04afd8f2be44ee0e39e033c40faf43dbc1c11764b07a2687/anthropic-0.59.0-py3-none-any.whl", hash = "sha256:cbc8b3dccef66ad6435c4fa1d317e5ebb092399a4b88b33a09dc4bf3944c3183", size = 293057, upload-time = "2025-07-23T16:23:14.934Z" },
+    { url = "https://files.pythonhosted.org/packages/da/bb/d84f287fb1c217b30c328af987cf8bbe3897edf0518dcc5fa39412f794ec/anthropic-0.60.0-py3-none-any.whl", hash = "sha256:65ad1f088a960217aaf82ba91ff743d6c89e9d811c6d64275b9a7c59ee9ac3c6", size = 293116, upload-time = "2025-07-28T19:53:45.944Z" },
 ]
 
 [[package]]
@@ -950,7 +950,7 @@ wheels = [
 
 [[package]]
 name = "huggingface-hub"
-version = "0.34.1"
+version = "0.34.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "filelock" },
@@ -962,9 +962,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/22/cd/841bc8e0550d69f632a15cdd70004e95ba92cd0fbe13087d6669e2bb5f44/huggingface_hub-0.34.1.tar.gz", hash = "sha256:6978ed89ef981de3c78b75bab100a214843be1cc9d24f8e9c0dc4971808ef1b1", size = 456783, upload-time = "2025-07-25T14:54:54.758Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/11/53/572b9c03ca0cabb3d71e02b1750b595196332cfb8c4d74a90de383451171/huggingface_hub-0.34.2.tar.gz", hash = "sha256:a27c1ba3d2a70b378dce546c8be3a90349a64e6bd5d7a806679d4bf5e5d2d8fe", size = 456837, upload-time = "2025-07-28T10:12:09.32Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8c/cf/dd53c0132f50f258b06dd37a4616817b1f1f6a6b38382c06effd04bb6881/huggingface_hub-0.34.1-py3-none-any.whl", hash = "sha256:60d843dcb7bc335145b20e7d2f1dfe93910f6787b2b38a936fb772ce2a83757c", size = 558788, upload-time = "2025-07-25T14:54:52.957Z" },
+    { url = "https://files.pythonhosted.org/packages/24/20/5ee412acef0af05bd3ccc78186ccb7ca672f9998a7cbc94c011df8f101f4/huggingface_hub-0.34.2-py3-none-any.whl", hash = "sha256:699843fc58d3d257dbd3cb014e0cd34066a56372246674322ba0909981ec239c", size = 558843, upload-time = "2025-07-28T10:12:07.064Z" },
 ]
 
 [[package]]
@@ -2865,7 +2865,7 @@ wheels = [
 
 [[package]]
 name = "stagehand"
-version = "0.4.1"
+version = "0.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anthropic" },
@@ -2879,9 +2879,9 @@ dependencies = [
     { name = "requests" },
     { name = "rich" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e8/82/24f6ade40784ad51b6e2687ff2e077d02210bb0db35fdb3302d7425c9dc5/stagehand-0.4.1.tar.gz", hash = "sha256:721934b47b0756519ce9920d50879b58a3e919f44fa11ac1b1957490f3903124", size = 89751, upload-time = "2025-07-18T19:51:05.216Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b8/36/e1e5f5c1048e345bc4b09cdaa638134c613f8c6d056b32ac542a7f38c91e/stagehand-0.5.0.tar.gz", hash = "sha256:58d11bc05178033e0f224c2d7969cff8945d0e5b1416dc88b30e4d578f309cdc", size = 90959, upload-time = "2025-07-28T23:44:40.164Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/84/db/594daf76d214ceed02733f1225ea2e66ab7c84e454cbf5da67b3f5e8447b/stagehand-0.4.1-py3-none-any.whl", hash = "sha256:a212f5d018e0e44991c28f27a9140fa841aca0365c72b0d97dd137faa8f1c226", size = 100874, upload-time = "2025-07-18T19:51:03.903Z" },
+    { url = "https://files.pythonhosted.org/packages/98/5c/9adaf1c9ee3457d906d84071a705cbe22583ab581d533c6483251feaef60/stagehand-0.5.0-py3-none-any.whl", hash = "sha256:4b7a61e414c8680ed601d7b3ddc1ea46b4b308d649a286f65db0f17b28f19a68", size = 102142, upload-time = "2025-07-28T23:44:38.951Z" },
 ]
 
 [[package]]

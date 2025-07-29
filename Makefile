@@ -1,11 +1,18 @@
+SED_CMD=$(shell which gsed || which sed)
+LOCALARCH=$(shell uname -m | $(SED_CMD) 's/x86_64/amd64/' | $(SED_CMD) 's/aarch64/arm64/')
+
 DOCKER_COMPOSE_CMD=docker compose
 DOCKER_COMPOSE_ENV=--env-file .env --env-file .env.override
 
 DOCKER_BUILDER_NAME=mcp-builder
 DOCKER_REGISTRY_NAME=ghcr.io/$(shell whoami)/mcp-servers
 DOCKER_REGISTRY_TAG=$(shell git describe --tags --abbrev=0 2>/dev/null || echo "local")
-DOCKER_LOCAL_PLATFORM=$(shell uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
-DOCKER_BUILD_ARGS=--build-arg DOCKER_REGISTRY_TAG=$(DOCKER_REGISTRY_TAG) --build-arg MCP_IMAGE_REGISTRY=$(DOCKER_REGISTRY_NAME)
+
+# Build arguments for Docker
+DOCKER_BUILD_ARGS = --platform linux/$(LOCALARCH)
+DOCKER_BUILD_ARGS += --build-arg LOCALARCH=$(LOCALARCH)
+DOCKER_BUILD_ARGS += --build-arg MCP_IMAGE_REGISTRY=$(DOCKER_REGISTRY_NAME)
+DOCKER_BUILD_ARGS += --build-arg DOCKER_REGISTRY_TAG=$(DOCKER_REGISTRY_TAG)
 
 AGENT_PROXY_WEB_PORT=15000
 AGENT_PROXY_MCP_PORT=10000
@@ -25,16 +32,17 @@ clean:
 	docker buildx prune -f --filter "until=24h" || true
 	docker system prune -f --volumes
 	rm -rf ./logs/* ./reports/*.cve
+	rm -rf ./docker/sdk/*/.venv ./docker/sdk/*/uv.lock
 
 .PHONY: buildx-default
 buildx-default:
-	docker buildx create --name $(DOCKER_BUILDER_NAME) --platform linux/$(DOCKER_LOCAL_PLATFORM) --driver docker-container --use || true
+	docker buildx create --name $(DOCKER_BUILDER_NAME) --platform linux/$(LOCALARCH) --driver docker-container --use || true
 	#docker buildx use $(DOCKER_BUILDER_NAME)
 	docker buildx use default || true
 
 .PHONY: build/agentgateway
 build/agentgateway: buildx-default
-	docker build -t $(DOCKER_REGISTRY_NAME)/agentgateway:$(DOCKER_REGISTRY_TAG) -f docker/gateways/agentgateway/Dockerfile .
+	docker build $(DOCKER_BUILD_ARGS) -t $(DOCKER_REGISTRY_NAME)/agentgateway:$(DOCKER_REGISTRY_TAG) -f docker/gateways/agentgateway/Dockerfile .
 
 .PHONY: build/base
 build/base: buildx-default
@@ -42,9 +50,7 @@ build/base: buildx-default
 	@set -e; mkdir -p logs; \
 	for base in $(MCP_BASE); do \
 		echo "Building base image: $$base"; \
-		docker build \
-			--build-arg DOCKER_REGISTRY_TAG=$(DOCKER_REGISTRY_TAG) \
-			--build-arg MCP_IMAGE_REGISTRY=$(DOCKER_REGISTRY_NAME) \
+		docker build $(DOCKER_BUILD_ARGS) \
 			-t $(DOCKER_REGISTRY_NAME)/base-$$base:$(DOCKER_REGISTRY_TAG) \
 			-f docker/base/$$base/Dockerfile docker/base/$$base \
 			2>&1 | tee logs/build-base-$$base.log; \
@@ -55,9 +61,7 @@ build/mcp: build/base
 	@set -e; mkdir -p logs; \
 	for service in $(MCP_SERVICES); do \
 		echo "Building MCP service: $$service -> docker build"; \
-		docker build \
-			--build-arg DOCKER_REGISTRY_TAG=$(DOCKER_REGISTRY_TAG) \
-			--build-arg MCP_IMAGE_REGISTRY=$(DOCKER_REGISTRY_NAME) \
+		docker build $(DOCKER_BUILD_ARGS) \
 			-t $(DOCKER_REGISTRY_NAME)/$$service:$(DOCKER_REGISTRY_TAG) \
 			-f docker/mcp/$$service/Dockerfile docker/mcp/$$service \
 			2>&1 | tee logs/build-mcp-$$service.log; \
@@ -75,9 +79,7 @@ build/sdk: build/base
 	@set -e; mkdir -p logs; \
 	for sdk in $(AGENT_SDK); do \
 		echo "Building Agent SDK: $$sdk -> docker build"; \
-		docker build \
-			--build-arg DOCKER_REGISTRY_TAG=$(DOCKER_REGISTRY_TAG) \
-			--build-arg MCP_IMAGE_REGISTRY=$(DOCKER_REGISTRY_NAME) \
+		docker build $(DOCKER_BUILD_ARGS) \
 			-t $(DOCKER_REGISTRY_NAME)/$$sdk:$(DOCKER_REGISTRY_TAG) \
 			-f docker/sdk/$$sdk/Dockerfile docker/sdk/$$sdk \
 			2>&1 | tee logs/build-sdk-$$sdk.log; \
@@ -130,4 +132,3 @@ stop:
 .PHONY: logs
 logs:
 	docker compose logs -f
-
