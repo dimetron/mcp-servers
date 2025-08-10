@@ -1,6 +1,7 @@
 SED_CMD=$(shell which gsed || which sed)
 LOCALARCH=$(shell uname -m | $(SED_CMD) 's/x86_64/amd64/' | $(SED_CMD) 's/aarch64/arm64/')
 
+BASE_IMAGE_REGISTRY=cgr.dev
 DOCKER_COMPOSE_CMD=docker compose
 DOCKER_COMPOSE_ENV=--env-file .env --env-file .env.override
 
@@ -11,6 +12,7 @@ DOCKER_REGISTRY_TAG=$(shell git describe --tags --abbrev=0 2>/dev/null || echo "
 # Build arguments for Docker
 DOCKER_BUILD_ARGS = --platform linux/$(LOCALARCH)
 DOCKER_BUILD_ARGS += --build-arg LOCALARCH=$(LOCALARCH)
+DOCKER_BUILD_ARGS += --build-arg BASE_IMAGE_REGISTRY=$(BASE_IMAGE_REGISTRY)
 DOCKER_BUILD_ARGS += --build-arg MCP_IMAGE_REGISTRY=$(DOCKER_REGISTRY_NAME)
 DOCKER_BUILD_ARGS += --build-arg DOCKER_REGISTRY_TAG=$(DOCKER_REGISTRY_TAG)
 

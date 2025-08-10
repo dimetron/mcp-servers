@@ -1,19 +1,22 @@
 # ---- Stage 1: Build the app ----
-ARG MCP_IMAGE_REGISTRY
-ARG DOCKER_REGISTRY_TAG
+ARG MCP_IMAGE_REGISTRY=ghcr.io/dimetron/mcp-servers
+ARG DOCKER_REGISTRY_TAG=local
 FROM ${MCP_IMAGE_REGISTRY}/base-java:${DOCKER_REGISTRY_TAG} AS builder
 
 WORKDIR /build
 
+#install maven
+RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh; sdk install maven" && \
+    ls /root/.sdkman/candidates/maven/current/bin && \
+    which mvn
+
 # Only copy metadata first to cache dependencies
 COPY pom.xml ./
-COPY .mvn .mvn
-COPY mvnw ./
-RUN ./mvnw dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
 # Now copy the rest of the app
 COPY src ./src
-RUN ./mvnw package -DskipTests -B
+RUN mvn package -DskipTests -B
 
 # ---- Stage 2: Runtime image ----
 FROM ${MCP_IMAGE_REGISTRY}/base-java:${DOCKER_REGISTRY_TAG} AS app
